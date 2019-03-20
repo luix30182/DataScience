@@ -9,13 +9,13 @@ data = data.drop(columns=['113 Cause Name','Year'])
 
 deathsAge = data.groupby(['State']).first()
 deathsAge = deathsAge.drop(columns=['Cause Name'])
-deathsAge = deathsAge.drop('United States')
+# deathsAge = deathsAge.drop('United States')
 states = deathsAge.index.values
 ages = deathsAge['Age-adjusted Death Rate'].values
 deathsByAge = deathsAge['Deaths'].values
 deathsByAge = [(x/100) for x in deathsByAge]
-# Plot by age
 
+# Plot by age
 plt.plot(states,ages, label="Age US")
 plt.plot(states,deathsByAge, label="Deaths US")
 plt.grid(True)
