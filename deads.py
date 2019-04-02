@@ -9,7 +9,7 @@ pd.set_option('display.max_colwidth',1000)
 pd.set_option('display.width',1000)
 
 data = pd.read_csv(sys.argv[1], encoding='latin-1')
-word = sys.argv[2]
+word = sys.argv[2].lower()
 entityName = pd.read_csv('DataScienceDataSets\\defunciones2017\\catalogos\\decateml.csv',encoding='latin-1')
 entityCVE = pd.read_csv('DataScienceDataSets\\defunciones2017\\conjunto_de_datos\\conjunto_de_datos_defunciones_generales_2017.CSV', encoding='latin-1')
 
@@ -30,7 +30,13 @@ fulldata2['DESCRIP'] = fulldata2['DESCRIP'].str.lower()
 filterRows = fulldata2[fulldata2['DESCRIP'].str.contains(word)]
 filtered = filterRows.groupby(['nom_loc','CVE']).first()
 filteredCounter = filterRows.groupby(['nom_loc'])['DESCRIP'].count()
-print(filteredCounter)
 
-with pd.option_context('display.max_rows', None, 'display.max_columns', 10000):
-    print(filtered)
+wCounter = data[data['DESCRIP'].str.contains(word)]
+wCounter = wCounter.groupby('DESCRIP').count()
+
+r = data['DESCRIP'].values
+for x in r:
+    print(x)
+# print(filteredCounter)
+# with pd.option_context('display.max_rows', None, 'display.max_columns', 10000):
+    # print(filtered)
