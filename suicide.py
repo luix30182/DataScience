@@ -76,14 +76,11 @@ elif option == 2:
           females.append(y['female'])
       except:
         print('Error')
-    print(len(males))
-    print(len(females))
     # plot
     fig, ax = plt.subplots()
     bar_width = 0.45
     opacity = 0.8
     index = np.arange(len(Countrynames))
-    print(index)
     indexticks = [x + (bar_width/2) for x in index]
     rects1 = plt.bar(index, males, bar_width,
     alpha=opacity,
