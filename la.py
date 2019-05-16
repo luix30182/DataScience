@@ -2,12 +2,25 @@ import os
 import sys
 import re
 import json
-import pandas as pd
-import matplotlib.pyplot as plt
+import datetime
+import laToCSV
 
-rootDir = sys.argv[1]
+rootDir = sys.argv[2]
 content = ['Class Code','Open Date','ANNUAL SALARY ','DUTIES','REQUIREMENTS','WHERE TO APPLY','APPLICATION DEADLINE']
+try:
+  option = sys.argv[1]
+except:
+  option = 1
 
+now = datetime.datetime.now().strftime('%d-%m-%Y(%H-%M-%S)')
+filename = 'LosAngeles-{}'.format(now)
+
+if option == 1:
+  filename = filename + '.json'
+else:
+  filename = filename + '.csv'
+
+print(filename)
 def isInList(compareList,word):
   for x in compareList:
     if len(re.findall(x,word))>0:
@@ -26,10 +39,10 @@ def formatList(l):
   l = [x+',' for x in l]
   return ''.join(l)[:-1]
 
-with open('LosAngeles.json','w') as data:
+with open('LosAngelesTempFile.json','w') as data:
   data.write('[\n')
 
-csvFile = open('LosAngeles.json','a')
+csvFile = open('LosAngelesTempFile.json','a')
 
 for root, subFolders, files in os.walk(rootDir):
   numberOfFiles = 0
@@ -56,32 +69,32 @@ for root, subFolders, files in os.walk(rootDir):
         if search:
           if word == 'Class Code' and not code:
             code = True
+            classCode1 = 0
+            classCode2 = 0
             try:
-              # print(line.split(':')[1].strip())
-              dictHolder[word] = line.split(':')[1].strip() 
-              if ii == 0:
-                print(dictHolder)
-              # print(dictHolder[word])
+                classCode1 = line.split(':')[1].strip()
             except:
-              dictHolder[word] = line.split('.')[0].split(' ')[-1] 
+                classCode2 = line.split('.')[0].split(' ')[-1]
+            
+            if classCode1 != 0:
+              dictHolder[word] = classCode1
+              
+            else:
+              dictHolder[word] = classCode2
+
           elif word == 'Open Date':
             dictHolder[word] = line.split(':')[1].strip() 
           # si se encuentra coincidencia, se genera una lista apartir del indice actual
-          else:
+          elif word != 'Class Code' and word != 'Open Date':
             field = ''
             for x in cutedList(lines,i+1):
               if x.isupper():
                 break
               else:
                 field += x
+                
             dictHolder[word] = field
-            if ii == 0:
-              print('***********')
-              print(dictHolder)
       temp = json.dumps(dictHolder).replace(']',' ')
-      if(ii == 0):
-        print(dictHolder)
-    # print(ii)
     if ii == len(listOfFiles)-1:
       csvFile.write(temp)
     else:
@@ -90,4 +103,9 @@ for root, subFolders, files in os.walk(rootDir):
 csvFile.write(']\n')
 csvFile.write('\n')
 csvFile.close()
+print(option)
+if option == 1:
+  os.rename('LosAngelesTempFile.json',filename)
+else:
+  laToCSV.toCSV('LosAngelesTempFile.json',filename)
 

@@ -1,7 +1,20 @@
 import sys
+import json
+import csv
 
-jsonFile = sys.argv[1]
+def toCSV(jsonFile,nameFile):
+  with open(jsonFile,'r') as f:
+    a = ''.join(f.readlines())
 
-with open(jsonFile,'r') as f:
-  for x in f:
-    print(x)
+  json_parsed = json.loads(a) 
+
+  empsData = open(nameFile,'w')
+  csvWritter = csv.writer(empsData)
+
+  for i,x in enumerate(json_parsed):
+    if i==0:
+      header = x.keys()
+      csvWritter.writerow(header)
+    csvWritter.writerow(x.values())
+
+  empsData.close()
