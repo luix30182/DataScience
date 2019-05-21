@@ -6,9 +6,12 @@ import datetime
 import laToCSV
 
 rootDir = sys.argv[2]
-content = ['Class Code','Open Date','ANNUAL SALARY ','DUTIES','REQUIREMENTS','WHERE TO APPLY','APPLICATION DEADLINE']
+content = ['Class Code','ANNUAL SALARY','Open Date','ANNUAL SALARY ','DUTIES','REQUIREMENTS','WHERE TO APPLY','APPLICATION DEADLINE']
+
+option = 1
+
 try:
-  option = sys.argv[1]
+  option = int(sys.argv[1])
 except:
   option = 1
 
@@ -108,4 +111,3 @@ if option == 1:
   os.rename('LosAngelesTempFile.json',filename)
 else:
   laToCSV.toCSV('LosAngelesTempFile.json',filename)
-
